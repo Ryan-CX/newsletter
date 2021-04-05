@@ -1,11 +1,14 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const axios = require('axios');
+
 const https = require('https');
+require('dotenv').config();
+let api = process.env.API;
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/signup.html');
 });
@@ -32,7 +35,7 @@ app.post('/', (req, res) => {
 
 	const options = {
 		method: 'POST',
-		auth: 'xcg:fe7cf0ea311bba55da5f9242c3956edb-us10',
+		auth: `xcg:${api}`,
 	};
 	const request = https.request(url, options, (response) => {
 		if (response.statusCode === 200) {
@@ -41,7 +44,7 @@ app.post('/', (req, res) => {
 			res.send('There was an error, try again.');
 		}
 		response.on('data', (data) => {
-			console.log(JSON.parse(data));
+			console.log(data);
 		});
 	});
 	request.write(jsonData);
@@ -51,7 +54,3 @@ app.post('/', (req, res) => {
 app.listen(port, () => {
 	console.log(`Server is running at ${port}`);
 });
-
-//fe7cf0ea311bba55da5f9242c3956edb-us10
-
-//a6fa1d8f94
